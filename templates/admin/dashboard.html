@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Admin Dashboard</h1>
+
+<div style="display: flex; gap: 20px; margin-bottom: 30px;">
+    <div style="padding: 20px; border: 1px solid #ccc; flex: 1;">
+        <h2>Total Doctors</h2>
+        <p style="font-size: 2em; color: #007bff;">{{ total_doctors }}</p>
+    </div>
+    <div style="padding: 20px; border: 1px solid #ccc; flex: 1;">
+        <h2>Total Patients</h2>
+        <p style="font-size: 2em; color: #38761d;">{{ total_patients }}</p>
+    </div>
+    <div style="padding: 20px; border: 1px solid #ccc; flex: 1;">
+        <h2>Total Appointments</h2>
+        <p style="font-size: 2em; color: #a61c00;">{{ total_appointments }}</p>
+    </div>
+</div>
+
+<hr>
+
+<div style="margin-top: 30px;">
+    <h2>Administrative Management & Reports</h2>
+    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+        <a href="{{ url_for('manage_doctors') }}" class="button" style="background: #007bff;">Manage Doctors</a>
+        <a href="{{ url_for('view_all_appointments') }}" class="button" style="background: #38761d;">View All Appointments</a>
+        <a href="{{ url_for('view_all_patients') }}" class="button" style="background: #a61c00;">View All Patients</a>
+    </div>
+</div>
+
+{% endblock %}

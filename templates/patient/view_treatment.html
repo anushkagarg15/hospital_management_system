@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ section_title }}</h1>
+
+<div style="margin-bottom: 20px; padding: 15px; background: #e0f0ff; border: 1px solid #007bff; border-radius: 5px;">
+    <strong>Appointment Date:</strong> {{ appointment['date'] }} at {{ appointment['time'] }}
+    <br>
+    <strong>Attending Doctor:</strong> Dr. {{ appointment['doctor_name'] }} ({{ appointment['specialization_name'] }})
+    <br>
+    <strong>Treatment Recorded On:</strong> {{ treatment['treatment_date'] }}
+</div>
+
+<div style="background: white; padding: 20px; border: 1px solid #e0e0e0; margin-bottom: 30px;">
+    <h2>Diagnosis</h2>
+    <div style="background: #f0f8ff; padding: 15px; border-radius: 3px; white-space: pre-wrap; border: 1px solid #cceeff;">
+        {{ treatment['diagnosis'] }}
+    </div>
+</div>
+
+<div style="background: white; padding: 20px; border: 1px solid #e0e0e0; margin-bottom: 30px;">
+    <h2>Prescription</h2>
+    {% if treatment['prescription'] %}
+        <div style="background: #fff8f0; padding: 15px; border-radius: 3px; white-space: pre-wrap; border: 1px solid #ffe8cc;">
+            {{ treatment['prescription'] }}
+        </div>
+    {% else %}
+        <p>No prescription was recorded for this visit.</p>
+    {% endif %}
+</div>
+
+<a href="{{ url_for('patient_dashboard') }}" class="button" style="background: #007bff;">
+    ← Back to Dashboard
+</a>
+
+{% endblock %}

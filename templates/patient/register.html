@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="width: 400px; margin: 30px auto; padding: 20px; background: white; border: 1px solid #ccc; border-radius: 5px;">
+    <h2>Patient Registration</h2>
+    <form method="POST" action="{{ url_for('patient_register') }}">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="contact_info">Contact/Email</label>
+        <input type="email" id="contact_info" name="contact_info" required>
+        <small style="display: block; margin-bottom: 10px;">(Used as contact info)</small>
+
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+
+        <button type="submit">Register</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ section_title }}</h1>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<hr>
+
+<div style="margin-bottom: 40px; border: 1px solid #ccc; padding: 20px; border-radius: 8px;">
+    <h2>Set New Availability Slot</h2>
+    <form method="POST" action="{{ url_for('set_availability') }}" style="display: flex; gap: 15px; align-items: flex-end;">
+        <div>
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date" required 
+                min="{{ today_str }}" 
+                style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+        </div>
+        <div>
+            <label for="time">Time (24h format):</label>
+            <input type="time" id="time" name="time" required 
+                   style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+        </div>
+        <button type="submit" class="button" style="background: #38761d;">Add Availability</button>
+    </form>
+
+    <h3 style="margin-top: 20px;">Your Available Slots (Next 7 Days)</h3>
+    {% if grouped_availability %}
+        <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-top: 10px;">
+        {% for day in next_seven_days %}
+            <div style="border: 1px solid #eee; padding: 10px; border-radius: 4px; flex-basis: 180px;">
+                <strong>{{ day }}</strong>
+                {% if grouped_availability[day] %}
+                    <ul style="list-style: none; padding: 0; margin-top: 5px;">
+                        {% for slot in grouped_availability[day] %}
+                            <li style="font-size: 0.9em; color: {% if slot['is_booked'] %}#a61c00{% else %}#007bff{% endif %};">
+                                {{ slot['start_time'] }} 
+                                {% if slot['is_booked'] %} (Booked)
+                                {% else %} (Free)
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p style="font-size: 0.9em; color: #777;">No slots set.</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">No availability slots defined for the next 7 days.</div>
+    {% endif %}
+</div>
+
+<hr>
+
+<div style="margin-bottom: 40px;">
+    <h2>Upcoming Appointments (Status: Booked)</h2>
+    {% if upcoming_appointments %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Date / Time</th>
+                    <th>Patient Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for appt in upcoming_appointments %}
+                    <tr>
+                        <td>{{ appt['date'] }} at {{ appt['time'] }}</td>
+                        <td>{{ appt['patient_name'] }}</td>
+                        <td style="display: flex; gap: 5px;">
+                            <a href="{{ url_for('consultation_form', appointment_id=appt['id']) }}" class="button" style="background: #007bff;">Start Consultation</a>
+                            
+                            <form method="POST" action="{{ url_for('cancel_appointment', appointment_id=appt['id']) }}" style="display: inline;" onsubmit="return confirm('Are you sure you want to cancel this appointment? The slot will be freed up.')">
+                                <button type="submit" class="button" style="background: #a61c00;">Cancel</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-info">No upcoming booked appointments.</div>
+    {% endif %}
+</div>
+
+<hr>
+
+<div>
+    <h2>Recent Completed Consultations</h2>
+    {% if recent_completed %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Date / Time</th>
+                    <th>Patient Name</th>
+                    <th>Diagnosis Summary</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for appt in recent_completed %}
+                    <tr>
+                        <td>{{ appt['date'] }} at {{ appt['time'] }}</td>
+                        <td>{{ appt['patient_name'] }}</td>
+                        <td>{{ appt['diagnosis'] | truncate(70) }}</td>
+                        <td>
+                            <a href="{{ url_for('view_patient_history', patient_id=appt['patient_id']) }}" class="button" style="background: #5b5b5b;">View Full History</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-info">No recent completed treatments on record.</div>
+    {% endif %}
+</div>
+
+{% endblock %}

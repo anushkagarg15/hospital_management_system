@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="width: 300px; margin: 50px auto; padding: 20px; background: white; border: 1px solid #ccc; border-radius: 5px;">
+    <h2>User Login</h2>
+    <form method="POST" action="{{ url_for('login') }}">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required value="{{ username | default('') }}">
+        
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+        
+        
+        <button type="submit">Log In</button>
+    </form>
+    <p style="margin-top: 15px;">
+        New Patient? <a href="{{ url_for('patient_register') }}">Register Here</a>
+    </p>
+</div>
+{% endblock %}

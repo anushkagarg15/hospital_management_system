@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ section_title }}</h1>
+
+<a href="{{ url_for('doctor_dashboard') }}" class="button" style="background: #007bff; margin-bottom: 20px;">
+    ← Back to Dashboard
+</a>
+
+{% if history %}
+    {% for record in history %}
+        <div style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 5px;">
+            <h3>Consultation on {{ record['treatment_date'] }}</h3>
+            <p>
+                **Attending Doctor:** Dr. {{ record['doctor_name'] }} ({{ record['specialization'] }})
+            </p>
+            
+            <div style="margin-top: 10px;">
+                <h4>Diagnosis</h4>
+                <div style="background: #f0f8ff; padding: 10px; border-radius: 3px; white-space: pre-wrap;">
+                    {{ record['diagnosis'] }}
+                </div>
+            </div>
+            
+            {% if record['prescription'] %}
+            <div style="margin-top: 10px;">
+                <h4>Prescription</h4>
+                <div style="background: #fff8f0; padding: 10px; border-radius: 3px; white-space: pre-wrap;">
+                    {{ record['prescription'] }}
+                </div>
+            </div>
+            {% endif %}
+
+            {% if record['doctor_notes'] %}
+            <div style="margin-top: 10px; opacity: 0.8;">
+                <h4>Doctor's Internal Notes</h4>
+                <div style="background: #f4f4f4; padding: 10px; border-radius: 3px; white-space: pre-wrap;">
+                    {{ record['doctor_notes'] }}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+{% else %}
+    <div class="alert alert-info">This patient has no recorded treatment history.</div>
+{% endif %}
+
+{% endblock %}

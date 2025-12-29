@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ section_title }}</h1>
+
+<a href="{{ url_for('admin_dashboard') }}" class="button" style="background: #007bff; margin-bottom: 20px;">
+    ← Back to Dashboard
+</a>
+
+{% if appointments %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Date / Time</th>
+                <th>Patient Name</th>
+                <th>Doctor</th>
+                <th>Specialization</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for appt in appointments %}
+                <tr>
+                    <td>{{ appt['id'] }}</td>
+                    <td>{{ appt['date'] }} at {{ appt['time'] }}</td>
+                    <td>{{ appt['patient_name'] }}</td>
+                    <td>Dr. {{ appt['doctor_name'] }}</td>
+                    <td>{{ appt['specialization'] }}</td>
+                    <td>
+                        <span style="font-weight: bold; color: 
+                            {% if appt['status'] == 'Completed' %}green
+                            {% elif appt['status'] == 'Cancelled' %}red
+                            {% else %}#007bff
+                            {% endif %};">
+                            {{ appt['status'] }}
+                        </span>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div class="alert alert-info">No appointment records found in the system.</div>
+{% endif %}
+
+{% endblock %}

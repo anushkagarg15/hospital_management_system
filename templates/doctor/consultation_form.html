@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ section_title }}</h1>
+
+<div style="margin-bottom: 20px; padding: 15px; background: #e0f0ff; border: 1px solid #007bff; border-radius: 5px;">
+    <strong>Appointment Details:</strong>
+    Date: **{{ appointment['date'] }}** at **{{ appointment['time'] }}**
+    <br>
+    Patient: **{{ appointment['patient_name'] }}**
+</div>
+
+<div style="background: white; padding: 20px; border: 1px solid #e0e0e0; margin-bottom: 30px;">
+    <h2>Consultation and Treatment Record</h2>
+    <form method="POST" action="{{ url_for('submit_treatment', appointment_id=appointment['id']) }}">
+        
+        <label for="diagnosis">Diagnosis (Required):</label>
+        <textarea id="diagnosis" name="diagnosis" rows="3" required></textarea>
+
+        <label for="prescription">Prescription:</label>
+        <textarea id="prescription" name="prescription" rows="5" placeholder="Enter medication, dosage, and instructions here."></textarea>
+
+        <label for="doctor_notes">Doctor's Private Notes:</label>
+        <textarea id="doctor_notes" name="doctor_notes" rows="3" placeholder="Internal notes not visible to patient."></textarea>
+
+        <button type="submit">Submit Treatment & Complete Appointment</button>
+        <a href="{{ url_for('doctor_dashboard') }}" class="button" style="background: #ccc; color: #333;">Cancel</a>
+    </form>
+</div>
+
+<div style="background: white; padding: 20px; border: 1px solid #e0e0e0;">
+    <h2>Patient History (Quick View)</h2>
+    {% if history %}
+        {% for record in history %}
+            <div style="border-left: 3px solid #007bff; padding: 10px; margin-bottom: 10px; background: #f4f4f4;">
+                <strong>Date:</strong> {{ record['treatment_date'] }}
+                <p style="margin: 5px 0 0 0;"><strong>Diagnosis:</strong> {{ record['diagnosis'] }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No past treatment history found for this patient.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

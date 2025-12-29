@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ section_title }}</h1>
+
+<a href="{{ url_for('admin_dashboard') }}" class="button" style="background: #007bff; margin-bottom: 20px;">
+    ← Back to Dashboard
+</a>
+
+{% if patients %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Contact Info</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for patient in patients %}
+                <tr>
+                    <td>{{ patient['id'] }}</td>
+                    <td>{{ patient['name'] }}</td>
+                    <td>{{ patient['contact_info'] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div class="alert alert-info">No patient records found in the system.</div>
+{% endif %}
+
+{% endblock %}

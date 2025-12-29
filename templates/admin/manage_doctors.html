@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ section_title }}</h1>
+
+<div style="margin-bottom: 20px;">
+    <h2>Add New Doctor</h2>
+    <form method="POST" action="{{ url_for('manage_doctors') }}">
+        <label for="name">Doctor Name:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="specialization_id">Specialization:</label>
+        <select id="specialization_id" name="specialization_id" required>
+            <option value="">-- Select Specialization --</option>
+            {% for specialization in specializations %}
+                <option value="{{ specialization['id'] }}">{{ specialization['name'] }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="contact_info">Contact Info (Email/Phone):</label>
+        <input type="text" id="contact_info" name="contact_info" required>
+
+        <label for="username">Login Username:</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+
+        <button type="submit">Add Doctor</button>
+    </form>
+</div>
+
+<hr>
+
+<h2>Existing Doctors</h2>
+{% if doctors %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Specialization</th>
+                <th>Contact</th>
+                <th>Username</th>
+                <th>Status</th>  <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for doctor in doctors %}
+            <tr>
+                <td>{{ doctor['id'] }}</td>
+                <td>{{ doctor['name'] }}</td>
+                <td>{{ doctor['specialization'] }}</td>
+                <td>{{ doctor['contact_info'] }}</td>
+                <td>{{ doctor['username'] }}</td>
+                <td>
+                    {% if doctor['is_blacklisted'] %}
+                        <span style="color: red; font-weight: bold;">Blacklisted</span>
+                    {% else %}
+                        <span style="color: green;">Active</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a class="button" href="{{ url_for('edit_doctor', doctor_id=doctor['id']) }}" style="padding: 5px 10px; background: #007bff;">Edit</a>
+                    
+                    <form method="POST" action="{{ url_for('toggle_doctor_blacklist', doctor_id=doctor['id']) }}" style="display: inline;" onsubmit="return confirm('Are you sure you want to change the status of {{ doctor['name'] }}?')">
+                        <button type="submit" style="padding: 5px 10px; background: {% if doctor['is_blacklisted'] %} #38761d {% else %} #a61c00 {% endif %};">
+                            {% if doctor['is_blacklisted'] %} Activate {% else %} Blacklist {% endif %}
+                        </button>
+                    </form>
+                    </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No doctors registered yet.</p>
+{% endif %}
+
+{% endblock %}

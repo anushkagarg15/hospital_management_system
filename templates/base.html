@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HMS | {{ section_title | default('Hospital Management') }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><a href="{{ url_for('index') }}">HMS</a></h1>
+            <nav>
+                <ul>
+                    {% if session.get('logged_in') %}
+                        <li><a href="{{ url_for('dashboard') }}">Dashboard ({{ session.get('role') }})</a></li>
+                        <li><a class="button" href="{{ url_for('logout') }}">Logout</a></li>
+                    {% else %}
+                        <li><a href="{{ url_for('login') }}">Login</a></li>
+                        <li><a href="{{ url_for('patient_register') }}">Register (Patient)</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <div class="container main-content">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>
